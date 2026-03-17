@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="bugtrackingsystem.client/bugtrackingsystem.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="BugTrackingSystem.Server/BugTrackingSystem.Server.csproj" />
+</Solution>
