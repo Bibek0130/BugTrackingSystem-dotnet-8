@@ -37,6 +37,7 @@ function BugForm() {
         //prevent default refreshes
         e.preventDefault();
 
+
         var bug = {
             Title: title,
             Description: description,
