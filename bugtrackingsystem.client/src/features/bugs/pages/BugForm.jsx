@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
+//import CreateNotification from '../../../components/common/CreateNotification';
 import ConfirmModal from '../../../components/common/ConfirmModal';
+import toast, { Toaster } from 'react-hot-toast';
+
 import api from '../../../services/api';
 
 
@@ -28,7 +31,11 @@ function BugForm() {
     }
 
     //handlilng confirmation
-     function handleConfirm() {
+    async function handleConfirm(e) {
+
+        //Browser refreshes the page when submitting using form. 
+        //prevent default refreshes
+        e.preventDefault();
 
         var bug = {
             Title: title,
@@ -41,17 +48,28 @@ function BugForm() {
 
         const url = 'Bugs';
         try {
-            const response = api.post(url, bug);
+            const response =await api.post(url, bug);
             console.log("Bug: ", bug);
-            if (response.data) {
-                console.log("Confirmed  submitted Response", response.data);
+
+            //check status and give notification
+            if (response.status >= 200 && response.status < 300) {
+                console.log("Confirmed submitted Response:", response.data);
+
+                //use toaster for create notification
+                toast.success(response.data.title + ' Bug Sucessfully created!!');
+               
+            } else {
+                // Handle unexpected status codes (e.g., 400, 403, 404)
+                console.warn("Server responded with an issue:", response.status);
             }
         } catch {
             console.log("Something is wrong in api.");
         }
 
-
         setShowModal(false);
+
+        //reset form
+        resetForm();
     }
 
     //habling submit
@@ -76,6 +94,15 @@ function BugForm() {
         }
 
         setShowModal(true);
+    }
+
+    //clear bug
+    function resetForm() {
+        //reset form using useState()
+        setTitle('');
+        setDescription('');
+        setStatus('Low');
+        setSeverity('Open');
     }
 
     return (
@@ -134,6 +161,8 @@ function BugForm() {
                     />
                 </div>
             </form>
+            
+            <Toaster />
         </>
     );
 }
