@@ -1,83 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import api from '../../../services/api';
 function BugList() {
-    const data = [
-        
-            {
-                "id": 2,
-                "title": "first Bug",
-                "description": "this is the first bug",
-                "status": "open",
-                "severity": "immediate",
-                "createdDate": "2026-03-17T17:43:02.49"
-            },
-            {
-                "id": 3,
-                "title": "sfdsf",
-                "description": "dasgfa",
-                "status": "Open",
-                "severity": "Low",
-                "createdDate": "2026-03-17T18:51:03.01"
-            },
-            {
-                "id": 4,
-                "title": "Notification",
-                "description": "After creating bug, a create notification should be visible.",
-                "status": "Open",
-                "severity": "Low",
-                "createdDate": "2026-03-17T18:55:24.908"
-            },
-           
-            {
-                "id": 22,
-                "title": "asd",
-                "description": "asd",
-                "status": "Open",
-                "severity": "Low",
-                "createdDate": "2026-03-18T16:20:03.012"
-            },
-            {
-                "id": 23,
-                "title": "asd",
-                "description": "asdasd saf asf",
-                "status": "Open",
-                "severity": "Low",
-                "createdDate": "2026-03-18T16:21:10.381"
-            },
-            {
-                "id": 24,
-                "title": "test refresgh",
-                "description": "asd",
-                "status": "Open",
-                "severity": "Low",
-                "createdDate": "2026-03-18T16:21:31.452"
+    var [data, setData] = useState([]); //for stroing lists
+    const [error, setError] = useState(""); //for error
+
+    //useEffect to call the api
+    useEffect(() => {
+        getList();
+    }, []);
+
+    async function getList() {
+        const url = "Bugs"
+        try {
+
+            setError("");
+            var response =await api.get(url);
+
+            //check status and give notification
+            if (response.status >= 200 && response.status < 300) {
+                console.log("Bug List", response.data);
+                const fetchedData = typeof response.data === 'string'
+                    ? JSON.parse(response.data)
+                    : response.data;
+
+                setData(fetchedData);
+                console.log("data", setData);
+
+            } else {
+                // Handle unexpected status codes (e.g., 400, 403, 404)
+                console.warn("Server responded with an issue:", response.status);
+                return;
             }
-        
-    ];
-    //getList();
-    //async function getList() {
-        //const url = "Bugs"
-        //try {
-        //    const response =await api.get(url);
-
-        //    //check status and give notification
-        //    if (response.status >= 200 && response.status < 300) {
-        //        console.log("Bug List", response.data);
-        //        data = response.data;
-        //        console.log("data", data);
-
-        //    } else {
-        //        // Handle unexpected status codes (e.g., 400, 403, 404)
-        //        console.warn("Server responded with an issue:", response.status);
-        //    }
-
-        //}
-        //catch {
-        //    console.log("Something is wrong in api.");
-        //}
-    //};
+            data = response.data;
+        }
+        catch (err) {
+            setError(err.message);
+            console.log("Something is wrong in api.", setError);
+        }
+    };
      
 
 
