@@ -17,6 +17,7 @@ function App() {
                     ["Create Bug", "create.svg"]
                 ]} />} >
                     <Route index element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashboard/> }/>
                     <Route path="/create-bug" element={<CreateBug />} />
                     <Route path="/my-bugs" element={<MyBugs />} />
                 </Route>
