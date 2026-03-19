@@ -1,6 +1,6 @@
 /* Burger and menu */
 .navbar-menu {
-    height: 100vh;
+    height: auto;
     background-color: white;
     box-shadow: 1px 1px 7px rgba(0,0,0,0.15);
     transition: all 0.5s ease;
@@ -52,4 +52,5 @@
 .app-container {
     display: flex; /* Activates Flexbox on the parent */
     min-height: 100vh; /* Ensures the container takes up the full screen height */
+    max-width: auto;
 }
