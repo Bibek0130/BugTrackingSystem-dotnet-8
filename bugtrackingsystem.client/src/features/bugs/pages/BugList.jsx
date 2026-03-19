@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import toast, { Toaster } from 'react-hot-toast';
 
 import api from '../../../services/api';
 function BugList() {
@@ -40,7 +41,31 @@ function BugList() {
             console.log("Something is wrong in api.", setError);
         }
     };
-     
+
+    //delete function
+    async function deleteBug(id) {
+
+        const Id = id.toString();
+        //api/Bugs/{id}
+        const url = 'Bugs/'+Id;
+        console.log("The bug to be deleted", Id);
+        try {
+            const response =await api.delete(url);
+            //check status and give notification
+            if (response.status >= 200 && response.status < 300) {
+                //use toaster for delete notification
+                toast.success('Bug Deleted Sucessfully!! with id ' + id);
+
+            } else {
+                // Handle unexpected status codes (e.g., 400, 403, 404)
+                console.warn("Server responded with an issue:", response.status);
+            }
+        } catch (err) {
+            setError(err.message);
+            console.log("Something wrong while deleting. Error: ", setError);
+        }
+       
+    };
 
 
 
@@ -58,6 +83,7 @@ function BugList() {
                         <th style={th}>Status</th>
                         <th style={th}>Severity</th>
                         <th style={th}>Created Date</th>
+                        <th style={th }>Action</th>
                     </tr>
                    
                 </thead>
@@ -72,12 +98,14 @@ function BugList() {
                                 <td style={td}>{val.status}</td>
                                 <td style={td}>{val.severity}</td>
                                 <td style={td}>{val.createdDate}</td>
+                                <td style={td} className=''><button className='btn btn-sm btn-danger' onClick={() => deleteBug(val.id) }>Delete</button></td>
                             </tr>
                         )
                     })}
                 </tbody>
                 
             </table>
+            <Toaster />
         </div>
     );
 }
