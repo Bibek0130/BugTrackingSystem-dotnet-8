@@ -48,7 +48,7 @@ const CustomNav = ({ li }) => {
                     })}
                 </ul>
             </nav>
-            <main style={{ marginLeft: window === false ? 50 : 150, transition: 'margin-left 0.3s' }}>
+            <main style={{ marginLeft: window === false ? 20 : 50, transition: 'margin-left 0.3s' }}>
                 <Outlet />
             </main>
         </div>
