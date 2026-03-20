@@ -24,9 +24,15 @@ namespace BugTrackingSystem.Server.Controllers
 
         // GET: api/Bugs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Bugs>>> GetBugs()
+        public async Task<ActionResult<IEnumerable<Bugs>>> GetBugs(int pageSize, int pageNumber )
         {
-            return await _context.Bugs.ToListAsync();
+            var data = _context.Bugs;
+            var paginationData = data
+                 .Skip((pageNumber -1) * pageSize)
+                .Take(pageSize);
+               
+                
+            return await paginationData.ToListAsync();
         }
 
         // GET: api/Bugs/5
