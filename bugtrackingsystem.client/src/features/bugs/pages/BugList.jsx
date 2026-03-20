@@ -6,6 +6,8 @@ import api from '../../../services/api';
 function BugList() {
     var [data, setData] = useState([]); //for stroing lists
     const [error, setError] = useState(""); //for error
+    const [pageSize, setPageSize] = useState(15);
+    const [pageNumber, setPageNumber] = useState(2);
 
     //useEffect to call the api
     useEffect(() => {
@@ -13,7 +15,7 @@ function BugList() {
     }, []);
 
     async function getList() {
-        const url = "Bugs"
+        const url = "Bugs?pageSize=" + pageSize + "&pageNumber=" + pageNumber; 
         try {
 
             setError("");
@@ -73,38 +75,41 @@ function BugList() {
    
     return (
         <div className='Bug-List'>
-            <h1 style={h1 }>My bugs</h1>
-            <table className="table-bordered" style={listtable}>
-                <thead>
-                    <tr>
-                        <th style={th}>SN</th>
-                        <th style={th}>Title</th>
-                        <th style={th}>Description</th>
-                        <th style={th}>Status</th>
-                        <th style={th}>Severity</th>
-                        <th style={th}>Created Date</th>
-                        <th style={th }>Action</th>
-                    </tr>
-                   
-                </thead>
+            <h1 style={h1}>My bugs</h1>]
+            <div style={tableResponsive }>
+                <table className="table-bordered table-scrollable" style={listtable}>
+                    <thead>
+                        <tr>
+                            <th style={th}>SN</th>
+                            <th style={th}>Title</th>
+                            <th style={th}>Description</th>
+                            <th style={th}>Status</th>
+                            <th style={th}>Severity</th>
+                            <th style={th}>Created Date</th>
+                            <th style={th}>Action</th>
+                        </tr>
 
-                <tbody>
-                    {data.map((val, key) => {
-                        return (
-                            <tr key={key}>
-                                <td style={td}>{key + 1}</td>
-                                <td style={td}> {val.title}</td>
-                                <td style={td}>{val.description}</td>
-                                <td style={td}>{val.status}</td>
-                                <td style={td}>{val.severity}</td>
-                                <td style={td}>{val.createdDate}</td>
-                                <td style={td} className=''><button className='btn btn-sm btn-danger' onClick={() => deleteBug(val.id) }>Delete</button></td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-                
-            </table>
+                    </thead>
+
+                    <tbody>
+                        {data.map((val, key) => {
+                            return (
+                                <tr key={key}>
+                                    <td style={td}>{key + 1}</td>
+                                    <td style={td}> {val.title}</td>
+                                    <td style={td}>{val.description}</td>
+                                    <td style={td}>{val.status}</td>
+                                    <td style={td}>{val.severity}</td>
+                                    <td style={td}>{val.createdDate}</td>
+                                    <td style={td} className=''><button className='btn btn-sm btn-danger' onClick={() => deleteBug(val.id)}>Delete</button></td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+
+                </table>
+            </div>
+           
             <Toaster />
         </div>
     );
@@ -128,4 +133,10 @@ const th = {
 
 const td = {
     textalign :"center"
+}
+const tableResponsive = { //needs fixing 
+    maxWidth: "1000px",   // Limit max width
+    width: "100%",        // Allow shrinking on smaller screens
+    overflowY: "auto",    // Horizontal scroll for small screens
+    display: "block"      // Required for overflow to work
 }
