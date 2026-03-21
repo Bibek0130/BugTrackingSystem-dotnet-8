@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 //import CreateNotification from '../../../components/common/CreateNotification';
 import ConfirmModal from '../../../components/common/ConfirmModal';
@@ -7,13 +7,29 @@ import toast, { Toaster } from 'react-hot-toast';
 import api from '../../../services/api';
 
 
-function BugForm() {
+function BugForm({ views, initialData }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [severity, setSeverity] = useState('Low');
     const [status, setStatus] = useState('Open');
     const [showModal, setShowModal] = useState(false);
+    var view = views;
+    console.log("view state", view);
 
+
+    useEffect(() => {
+        if (view == "Read" && initialData) {
+
+            setTitle(initialData.title);
+            setDescription(initialData.description);
+            setSeverity(initialData.severity);
+            setStatus(initialData.status);
+
+            //getList(pageNumber, pageSize);
+            console.log("BugForm is hit", view);
+        }
+
+    }, [view, initialData]);
     function handleChangeTitle(e) {
         setTitle(e.target.value);
     }
@@ -46,27 +62,27 @@ function BugForm() {
             CreatedDate: new Date()
         };
 
+       
+            const url = 'Bugs';
+            try {
+                const response = await api.post(url, bug);
+                console.log("Bug: ", bug);
 
-        const url = 'Bugs';
-        try {
-            const response =await api.post(url, bug);
-            console.log("Bug: ", bug);
+                //check status and give notification
+                if (response.status >= 200 && response.status < 300) {
+                    console.log("Confirmed submitted Response:", response.data);
 
-            //check status and give notification
-            if (response.status >= 200 && response.status < 300) {
-                console.log("Confirmed submitted Response:", response.data);
+                    //use toaster for create notification
+                    toast.success(response.data.title + ' Bug Sucessfully created!!');
 
-                //use toaster for create notification
-                toast.success(response.data.title + ' Bug Sucessfully created!!');
-               
-            } else {
-                // Handle unexpected status codes (e.g., 400, 403, 404)
-                console.warn("Server responded with an issue:", response.status);
+                } else {
+                    // Handle unexpected status codes (e.g., 400, 403, 404)
+                    console.warn("Server responded with an issue:", response.status);
+                }
+            } catch {
+                console.log("Something is wrong in api.");
             }
-        } catch {
-            console.log("Something is wrong in api.");
-        }
-
+    
         setShowModal(false);
 
         //reset form
@@ -107,8 +123,9 @@ function BugForm() {
     }
 
     return (
+      ( view === 'Create' || view === 'Read') && (
         <>
-            <h1 className="heading-4">Create a New Bug</h1>
+                <h1 className="heading-4">{view === 'Read' ? 'View Bug Details' : 'Create a New Bug'}</h1>
             <form>
                 {/* // Title Input   */}
                 <div className='form-group'>
@@ -146,25 +163,27 @@ function BugForm() {
                     </label>
                 </div>
 
-                <div className='form-group'>
-                    <label>
-                        <button className='btn btn-primary btn-sm' type="button" value='Submit' onClick={handleSubmit}>Submit</button>
-                    </label>
+                    {view === 'Create' && (
+                        <div className='form-group'>
+                            <label>
+                                <button className='btn btn-primary btn-sm' type="button" value='Submit' onClick={handleSubmit} >Submit</button>
+                            </label>
 
-                    {/* // Confirmation Modal */}
+                            {/* // Confirmation Modal */}
 
-                    <ConfirmModal
-                        isOpen={showModal}
-                        title="Confirm Submit"
-                        message="Are you sure you want to submit this bug?"
-                        onConfirm={handleConfirm}
-                        onCancel={() => setShowModal(false)}
-                    />
-                </div>
+                            <ConfirmModal
+                                isOpen={showModal}
+                                title="Confirm Submit"
+                                message="Are you sure you want to submit this bug?"
+                                onConfirm={handleConfirm}
+                                onCancel={() => setShowModal(false)}
+                            />
+                        </div>
+                    )}              
             </form>
-            
             <Toaster />
         </>
+    )
     );
 }
 
