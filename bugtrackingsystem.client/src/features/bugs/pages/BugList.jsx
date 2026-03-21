@@ -12,10 +12,10 @@ function BugList() {
 
     //useEffect to call the api
     useEffect(() => {
-        getList();
-    }, []);
+        getList(pageNumber, pageSize);
+    }, [pageNumber]);
 
-    async function getList() {
+    async function getList(pageNumber, pageSize) {
         const url = "Bugs?pageSize=" + pageSize + "&pageNumber=" + pageNumber; 
         try {
 
@@ -44,6 +44,7 @@ function BugList() {
             console.log("Something is wrong in api.", setError);
         }
     };
+
 
     //delete function
     async function deleteBug(id) {
@@ -114,7 +115,7 @@ function BugList() {
             {/*pagination footer  //need to call getList when pageNumber changes*/}
             <div className="items-center justify-center">
                 <span>Size</span>: <span>{ pageSize}</span>
-                <Pagination page={pageNumber} setPage={setPageNumber } />
+                <Pagination page={pageNumber} setPage={setPageNumber}  />
             </div>
            
             <Toaster />
