@@ -162,7 +162,7 @@ function BugList() {
                     </table>
                 </div>
 
-                /*pagination footer  //need to call getList when pageNumber changes*/
+                    {/* pagination footer  //need to call getList when pageNumber changes*/}
                 <div className="items-center justify-center">
                     <span>Size</span>: <span>{pageSize}</span>
                     <Pagination page={pageNumber} setPage={setPageNumber} />
