@@ -130,21 +130,21 @@ function BugForm({ views, initialData }) {
                 {/* // Title Input   */}
                 <div className='form-group'>
                     <label>Enter your title:
-                        <input required className="form-control" type="text" value={title} onChange={handleChangeTitle} />
+                            <input required className="form-control" type="text" value={title} onChange={handleChangeTitle} disabled={ view === 'Read'} />
                     </label>
                 </div>
 
                 {/* // Description Input   */}
                 <div className='form-group'>
                     <label >Description
-                        <textarea required className="form-control" type="text" value={description} onChange={handleChangeDescription}>  </textarea>
+                            <textarea required className="form-control" type="text" value={description} onChange={handleChangeDescription} disabled={view === 'Read' }>  </textarea>
                     </label>
                 </div>
 
                 {/* Severity dropdown */}
                 <div className='form-group'>
                     <label>Severity
-                        <select value={severity} onChange={handleChangeSeverity} className='form-control'>
+                            <select value={severity} onChange={handleChangeSeverity} className='form-control' disabled={view === 'Read' }>
                             <option value="Low">Low</option>
                             <option value="Medium">Medium</option>
                             <option value="High">High</option>
@@ -155,7 +155,7 @@ function BugForm({ views, initialData }) {
                 {/* Status dropdown */}
                 <div className='form-group'>
                     <label>Status
-                        <select value={status} onChange={handleChangeStatus} className='form-control'>
+                            <select value={status} onChange={handleChangeStatus} className='form-control' disabled={view === 'Read'}>
                             <option value="Open">Open</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Closed">Closed</option>
