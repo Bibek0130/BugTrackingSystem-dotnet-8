@@ -2,18 +2,27 @@ import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import toast, { Toaster } from 'react-hot-toast';
 import Pagination from '../../../components/pagination/Pagination.jsx';
+import BugForm from './BugForm.jsx';
 
 import api from '../../../services/api';
 function BugList() {
     var [data, setData] = useState([]); //for stroing lists
     const [error, setError] = useState(""); //for error
     const [pageSize, setPageSize] = useState(15);
-    const [pageNumber, setPageNumber] = useState(2);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [view, setView] = useState('List');
+    const [selectedBug, setSelectedBug] = useState(null);
 
     //useEffect to call the api
     useEffect(() => {
-        getList(pageNumber, pageSize);
-    }, [pageNumber]);
+        if (view == "List") {
+            getList(pageNumber, pageSize);
+        }
+        else if (view == 'Read') {
+            getListDataById(selectedBug.id);
+        }
+       
+    }, [pageNumber], [view]);
 
     async function getList(pageNumber, pageSize) {
         const url = "Bugs?pageSize=" + pageSize + "&pageNumber=" + pageNumber; 
@@ -45,6 +54,41 @@ function BugList() {
         }
     };
 
+    async function getListDataById(id) {
+
+        const Id = id.toString();
+        //api/Bugs/{id}
+        const url = 'Bugs/' + Id;
+        console.log("The bug to be viewed", Id);
+        console.log("View: ", view);
+        try {
+            const response = await api.get(url);
+            //check status and give notification
+            if (response.status >= 200 && response.status < 300) {
+                //use toaster for delete notification
+                toast.success('Viewing Bug with id ' + id);
+                console.log("BugList By Id data", response.data);
+
+            } else {
+                // Handle unexpected status codes (e.g., 400, 403, 404)
+                console.warn("Server responded with an issue:", response.status);
+            }
+        } catch (err) {
+            setError(err.message);
+            console.log("Something wrong while viewing. Error: ", setError);
+        }
+    }
+
+    //List Page
+    function viewBug(bug) {
+        setSelectedBug(bug);
+        setView('Read');
+        //fetch the data
+        getListDataById(bug.id);
+
+       // <BugForm views={view} />
+
+    }
 
     //delete function
     async function deleteBug(id) {
@@ -77,46 +121,63 @@ function BugList() {
    
     return (
         <div className='Bug-List'>
-            <h1 style={h1}>My bugs</h1>]
-            <div style={tableResponsive }>
-                <table className="table-bordered table-scrollable" style={listtable}>
-                    <thead>
-                        <tr>
-                            <th style={th}>SN</th>
-                            <th style={th}>Title</th>
-                            <th style={th}>Description</th>
-                            <th style={th}>Status</th>
-                            <th style={th}>Severity</th>
-                            <th style={th}>Created Date</th>
-                            <th style={th}>Action</th>
-                        </tr>
+            {/*//if view is list show the table*/}
+            {view === 'List' && (
+                <>
+                <h1 style={h1}>My bugs</h1>
+                <div style={tableResponsive}>
+                    <table className="table-bordered table-scrollable" style={listtable}>
+                        <thead>
+                            <tr>
+                                <th style={th}>SN</th>
+                                <th style={th}>Title</th>
+                                <th style={th}>Description</th>
+                                <th style={th}>Status</th>
+                                <th style={th}>Severity</th>
+                                <th style={th}>Created Date</th>
+                                <th style={th}>Action</th>
+                            </tr>
 
-                    </thead>
+                        </thead>
 
-                    <tbody>
-                        {data.map((val, key) => {
-                            return (
-                                <tr key={key}>
-                                    <td style={td}>{key + 1}</td>
-                                    <td style={td}> {val.title}</td>
-                                    <td style={td}>{val.description}</td>
-                                    <td style={td}>{val.status}</td>
-                                    <td style={td}>{val.severity}</td>
-                                    <td style={td}>{val.createdDate}</td>
-                                    <td style={td} className=''><button className='btn btn-sm btn-danger' onClick={() => deleteBug(val.id)}>Delete</button></td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
+                        <tbody>
+                            {data.map((val, key) => {
+                                return (
+                                    <tr key={key}>
+                                        <td style={td}>{key + 1}</td>
+                                        <td style={td}> {val.title}</td>
+                                        <td style={td}>{val.description}</td>
+                                        <td style={td}>{val.status}</td>
+                                        <td style={td}>{val.severity}</td>
+                                        <td style={td}>{val.createdDate}</td>
+                                        <td style={td} className=''>
+                                            <button className='btn btn-sm btn-info' onClick={() => viewBug(val)}>View</button>
+                                            <button className='btn btn-sm btn-danger' onClick={() => deleteBug(val.id)}>Delete</button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
 
-                </table>
-            </div>
+                    </table>
+                </div>
 
-            {/*pagination footer  //need to call getList when pageNumber changes*/}
-            <div className="items-center justify-center">
-                <span>Size</span>: <span>{ pageSize}</span>
-                <Pagination page={pageNumber} setPage={setPageNumber}  />
-            </div>
+                /*pagination footer  //need to call getList when pageNumber changes*/
+                <div className="items-center justify-center">
+                    <span>Size</span>: <span>{pageSize}</span>
+                    <Pagination page={pageNumber} setPage={setPageNumber} />
+                </div>
+                </>
+            )}
+
+            {/*if view is read, show the form*/}
+            {view === 'Read' && (
+                <>
+                    <button onClick={() => setView('List')}>Back to List</button>
+                    <BugForm views={view} initialData={selectedBug} />
+                </>
+            )}
+
            
             <Toaster />
         </div>

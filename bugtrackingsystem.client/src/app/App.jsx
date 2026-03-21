@@ -18,7 +18,7 @@ function App() {
                 ]} />} >
                     <Route index element={<Dashboard />} />
                     <Route path="/dashboard" element={<Dashboard/> }/>
-                    <Route path="/create-bug" element={<CreateBug />} />
+                    <Route path="/create-bug" element={<CreateBug views="Create"/>} />
                     <Route path="/my-bugs" element={<MyBugs />} />
                 </Route>
             </Routes></>
