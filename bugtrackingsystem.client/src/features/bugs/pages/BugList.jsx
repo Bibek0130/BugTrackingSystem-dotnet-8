@@ -23,7 +23,6 @@ function BugList() {
         }
         else if (view == 'Update'){
             getListDataById(selectedBug.id);
-            console.log("View from useEffects");
         }
        
     }, [pageNumber, view]);
@@ -61,17 +60,15 @@ function BugList() {
     async function getListDataById(id) {
 
         const Id = id.toString();
+
         //api/Bugs/{id}
         const url = 'Bugs/' + Id;
-        console.log("The bug to be viewed", Id);
-        console.log("View: ", view);
         try {
             const response = await api.get(url);
             //check status and give notification
             if (response.status >= 200 && response.status < 300) {
-                //use toaster for delete notification
+                //use toaster for Read view notification
                 toast.success('Viewing Bug with id ' + id);
-                console.log("BugList By Id data", response.data);
 
             } else {
                 // Handle unexpected status codes (e.g., 400, 403, 404)
@@ -87,11 +84,9 @@ function BugList() {
     function viewBug(bug) {
         setSelectedBug(bug);
         setView('Read');
+
         //fetch the data
         getListDataById(bug.id);
-
-       // <BugForm views={view} />
-
     }
 
     //update page
@@ -106,7 +101,6 @@ function BugList() {
         const Id = id.toString();
         //api/Bugs/{id}
         const url = 'Bugs/'+Id;
-        console.log("The bug to be deleted", Id);
         try {
             const response =await api.delete(url);
             //check status and give notification

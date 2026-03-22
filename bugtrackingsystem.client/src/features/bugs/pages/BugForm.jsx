@@ -24,9 +24,6 @@ function BugForm({ views, initialData }) {
             setDescription(initialData.description);
             setSeverity(initialData.severity);
             setStatus(initialData.status);
-
-            //getList(pageNumber, pageSize);
-            console.log("BugForm is hit", view);
         }
 
     }, [view, initialData]);
@@ -66,7 +63,6 @@ function BugForm({ views, initialData }) {
             const url = 'Bugs';
             try {
                 const response = await api.post(url, bug);
-                console.log("Bug: ", bug);
 
                 //check status and give notification
                 if (response.status >= 200 && response.status < 300) {
