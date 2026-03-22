@@ -21,8 +21,12 @@ function BugList() {
         else if (view == 'Read') {
             getListDataById(selectedBug.id);
         }
+        else if (view == 'Update'){
+            getListDataById(selectedBug.id);
+            console.log("View from useEffects");
+        }
        
-    }, [pageNumber], [view]);
+    }, [pageNumber, view]);
 
     async function getList(pageNumber, pageSize) {
         const url = "Bugs?pageSize=" + pageSize + "&pageNumber=" + pageNumber; 
@@ -90,6 +94,12 @@ function BugList() {
 
     }
 
+    //update page
+    function updateBug(bug) {
+        setSelectedBug(bug);
+        setView('Update');
+    }
+
     //delete function
     async function deleteBug(id) {
 
@@ -151,7 +161,8 @@ function BugList() {
                                         <td style={td}>{val.severity}</td>
                                         <td style={td}>{val.createdDate}</td>
                                         <td style={td} className=''>
-                                            <button className='btn btn-sm btn-info' onClick={() => viewBug(val)}>View</button>
+                                            <button className='btn btn-sm btn-info' onClick={() => viewBug(val)}>View</button> | 
+                                            <button className='btn btn-sm btn-primary' onClick={() => updateBug(val)}>Update</button> |
                                             <button className='btn btn-sm btn-danger' onClick={() => deleteBug(val.id)}>Delete</button>
                                         </td>
                                     </tr>
@@ -171,7 +182,7 @@ function BugList() {
             )}
 
             {/*if view is read, show the form*/}
-            {view === 'Read' && (
+            {view === 'Read' || view === 'Update' && (
                 <>
                     <button onClick={() => setView('List')}>Back to List</button>
                     <BugForm views={view} initialData={selectedBug} />
