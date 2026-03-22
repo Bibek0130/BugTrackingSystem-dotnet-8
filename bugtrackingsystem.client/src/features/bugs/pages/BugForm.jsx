@@ -18,7 +18,7 @@ function BugForm({ views, initialData }) {
 
 
     useEffect(() => {
-        if (view == "Read" && initialData) {
+        if (view == "Read" || view =="Update" && initialData) {
 
             setTitle(initialData.title);
             setDescription(initialData.description);
@@ -123,9 +123,9 @@ function BugForm({ views, initialData }) {
     }
 
     return (
-      ( view === 'Create' || view === 'Read') && (
+      ( view != 'List') && (
         <>
-                <h1 className="heading-4">{view === 'Read' ? 'View Bug Details' : 'Create a New Bug'}</h1>
+                <h1 className="heading-4">{(view === 'Read' || view =='Update') ? 'View Bug Details' : 'Create a New Bug'}</h1>
             <form>
                 {/* // Title Input   */}
                 <div className='form-group'>
@@ -163,7 +163,7 @@ function BugForm({ views, initialData }) {
                     </label>
                 </div>
 
-                    {view === 'Create' && (
+                    {view === 'Create' || view === 'Update' && (
                         <div className='form-group'>
                             <label>
                                 <button className='btn btn-primary btn-sm' type="button" value='Submit' onClick={handleSubmit} >Submit</button>
