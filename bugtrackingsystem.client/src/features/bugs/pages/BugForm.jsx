@@ -123,7 +123,7 @@ function BugForm({ views, initialData }) {
     }
 
     return (
-      ( view != 'List') && (
+      ( view != 'List' || view === 'Create') && (
         <>
                 <h1 className="heading-4">{(view === 'Read' || view =='Update') ? 'View Bug Details' : 'Create a New Bug'}</h1>
             <form>
@@ -163,23 +163,23 @@ function BugForm({ views, initialData }) {
                     </label>
                 </div>
 
-                    {view === 'Create' || view === 'Update' && (
-                        <div className='form-group'>
-                            <label>
-                                <button className='btn btn-primary btn-sm' type="button" value='Submit' onClick={handleSubmit} >Submit</button>
-                            </label>
+                    {(view === 'Create' || view === 'Update') && (                     
+                            <div className='form-group'>
+                                <label>
+                                    <button className='btn btn-primary btn-sm' type="button" value='Submit' onClick={handleSubmit} >Submit</button>
+                                </label>
 
-                            {/* // Confirmation Modal */}
+                                {/* // Confirmation Modal */}
 
-                            <ConfirmModal
-                                isOpen={showModal}
-                                title="Confirm Submit"
-                                message="Are you sure you want to submit this bug?"
-                                onConfirm={handleConfirm}
-                                onCancel={() => setShowModal(false)}
-                            />
-                        </div>
-                    )}              
+                                <ConfirmModal
+                                    isOpen={showModal}
+                                    title="Confirm Submit"
+                                    message="Are you sure you want to submit this bug?"
+                                    onConfirm={handleConfirm}
+                                    onCancel={() => setShowModal(false)}
+                                />
+                            </div>          
+                    )}        
             </form>
             <Toaster />
         </>
