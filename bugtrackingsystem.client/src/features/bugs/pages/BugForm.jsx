@@ -25,7 +25,7 @@ function BugForm({ views, initialData }) {
             setSeverity(initialData.severity);
             setStatus(initialData.status);
         }
-
+       
     }, [view, initialData]);
     function handleChangeTitle(e) {
         setTitle(e.target.value);
@@ -60,29 +60,62 @@ function BugForm({ views, initialData }) {
         };
 
        
-            const url = 'Bugs';
+           
             try {
-                const response = await api.post(url, bug);
+                
+                //create logic
+                if (view == 'Create') {
+                    const url = 'Bugs';
+                    const response = await api.post(url, bug);
+                    //check status and give notification
+                    if (response.status >= 200 && response.status < 300) {
+                        console.log("Confirmed submitted Response:", response.data);
 
-                //check status and give notification
-                if (response.status >= 200 && response.status < 300) {
-                    console.log("Confirmed submitted Response:", response.data);
+                        //use toaster for create notification
+                        toast.success(response.data.title + ' Bug Sucessfully created!!');
 
-                    //use toaster for create notification
-                    toast.success(response.data.title + ' Bug Sucessfully created!!');
-
-                } else {
-                    // Handle unexpected status codes (e.g., 400, 403, 404)
-                    console.warn("Server responded with an issue:", response.status);
+                    } else {
+                        // Handle unexpected status codes (e.g., 400, 403, 404)
+                        console.warn("Server responded with an issue:", response.status);
+                    }
+                    //reset form
+                    resetForm();
                 }
+                //update logic
+                else if (view == 'Update') {
+                    //api:Bugs/{id}
+                    const urlId = initialData.id;
+                    console.log("Bugs data", bug);
+
+                    var updatedBug = {
+                        Id: initialData.id,
+                        Title: title,
+                        Description: description,
+                        Status: status,
+                        Severity: severity,
+                        CreatedDate: initialData.createdDate
+                    }
+                    const url = 'Bugs/' + urlId; 
+                    const response = await api.put(url, updatedBug);
+
+                    //check status and give notification
+                    if (response.status >= 200 && response.status < 300) {
+                        console.log("Confirmed submitted Response:", response.data);
+
+                        //use toaster for create notification
+                        toast.success(' Bug Updated created!!');
+
+                    } else {
+                        // Handle unexpected status codes (e.g., 400, 403, 404)
+                        console.warn("Server responded with an issue:", response.status);
+                    }
+                }              
             } catch {
                 console.log("Something is wrong in api.");
             }
     
         setShowModal(false);
-
-        //reset form
-        resetForm();
+      
     }
 
     //habling submit
