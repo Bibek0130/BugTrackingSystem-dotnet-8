@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BugTrackingSystem.Server.Data;
 using BugTrackingSystem.Server.Models;
+using BugTrackingSystem.Server.Models.DTO;
+using Microsoft.Data.SqlClient;
 
 namespace BugTrackingSystem.Server.Controllers
 {
@@ -102,6 +104,24 @@ namespace BugTrackingSystem.Server.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        //Data using stored procedure
+        //_context.FromSql("spName 'parameter 1' 'parameter 2' ");
+        [HttpGet("sp-bugs")]
+        public async Task<ActionResult<BugDTO>> GetBugsFromSP(int id)
+        {
+            var idParam = new SqlParameter("@id", id);
+            //var bugParam = new SqlParameter("@bug", DBNull.Value); // Mapping to the optional @bug
+            var flagParam = new SqlParameter("@flag", "test");
+ 
+            var data = await _context.BugDTOs.FromSqlRaw("EXEC [dbo].[spBugs] @id, @flag", idParam, flagParam).ToListAsync();
+
+            var dd = data;
+            if(dd == null) return NoContent();
+
+            //return response
+            return Ok(dd);
         }
 
         private bool BugsExists(int id)
