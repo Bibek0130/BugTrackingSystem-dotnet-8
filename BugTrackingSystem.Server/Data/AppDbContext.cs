@@ -1,4 +1,5 @@
 ﻿using BugTrackingSystem.Server.Models;
+using BugTrackingSystem.Server.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugTrackingSystem.Server.Data
@@ -10,5 +11,14 @@ namespace BugTrackingSystem.Server.Data
             
         }
         public DbSet<Bugs> Bugs { get; set; }
+        //BugDTO
+        public DbSet<BugDTO> BugDTOs { get; set; }
+
+        //Model creating
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Map entityt to table if needed
+            modelBuilder.Entity<BugDTO>().ToTable("BugDTOs");
+        }
     }
 }
