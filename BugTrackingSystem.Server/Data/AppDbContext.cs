@@ -12,13 +12,18 @@ namespace BugTrackingSystem.Server.Data
         }
         public DbSet<Bugs> Bugs { get; set; }
         //BugDTO
-        public DbSet<BugDTO> BugDTOs { get; set; }
+        public DbSet<BugDTO> BugDTO { get; set; }
 
         //Model creating
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //
+            base.OnModelCreating(modelBuilder);
+
             //Map entityt to table if needed
-            modelBuilder.Entity<BugDTO>().ToTable("BugDTOs");
+            //Has no key tells ef core to not worry about tracking id, just map data.
+            modelBuilder.Entity<BugDTO>().HasNoKey();
+                //.ToTable("BugDTOs");
         }
     }
 }
