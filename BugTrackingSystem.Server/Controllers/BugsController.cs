@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using BugTrackingSystem.Server.Data;
 using BugTrackingSystem.Server.Models;
 using BugTrackingSystem.Server.Models.DTO;
-using Microsoft.Data.SqlClient;
 
 namespace BugTrackingSystem.Server.Controllers
 {
@@ -108,20 +107,30 @@ namespace BugTrackingSystem.Server.Controllers
 
         //Data using stored procedure
         //_context.FromSql("spName 'parameter 1' 'parameter 2' ");
-        [HttpGet("sp-bugs")]
-        public async Task<ActionResult<BugDTO>> GetBugsFromSP(int id)
+        [HttpGet("sp-GetBugsById")]
+        public async Task<ActionResult> GetBugsFromSP(int id)
         {
-            var idParam = new SqlParameter("@id", id);
-            //var bugParam = new SqlParameter("@bug", DBNull.Value); // Mapping to the optional @bug
-            var flagParam = new SqlParameter("@flag", "test");
- 
-            var data = await _context.BugDTOs.FromSqlRaw("EXEC [dbo].[spBugs] @id, @flag", idParam, flagParam).ToListAsync();
+            
+            try
+            {
+                //lets use FromSqlInterpolated for safe parametrization
+                var data = await _context.BugDTO.FromSqlInterpolated($"EXEC [dbo].[spBugs] @id = {id}, @flag = {"getBugsById"}").ToListAsync();
 
-            var dd = data;
-            if(dd == null) return NoContent();
+                var dd = data;
+                if (dd == null || !data.Any())
+                {
+                    return NotFound(new { message = $"No bugs found for ID {id}" });
+                }               
 
-            //return response
-            return Ok(dd);
+                //return response
+                return Ok(dd);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Exception occured at:  {ex.Message}");
+                var error = "An unexpected error occured. Please try again later.";
+                return StatusCode(500, new { message = error });
+            }           
         }
 
         private bool BugsExists(int id)
