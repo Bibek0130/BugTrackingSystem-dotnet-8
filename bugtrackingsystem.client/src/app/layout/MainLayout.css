@@ -50,7 +50,12 @@
 
 /* main body page */
 .app-container {
-    display: flex; /* Activates Flexbox on the parent */
-    min-height: 100vh; /* Ensures the container takes up the full screen height */
-    max-width: auto;
+    display: flex;  /*Activates Flexbox on the parent */
+    min-height: 100vh;  /*Ensures the container takes up the full screen height */
+    max-width: 1320px;
+}
+
+.padding-container {
+    padding: 0 0 0 0;
+    margin: 0;
 }
