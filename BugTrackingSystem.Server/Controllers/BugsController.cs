@@ -23,6 +23,13 @@ namespace BugTrackingSystem.Server.Controllers
             _context = context;
         }
 
+        //Get: api/Bugs
+        [HttpGet("bugs-count")]
+        public async Task<ActionResult<int>> GetBugsCount()
+        {
+            var data = await _context.Bugs.CountAsync();
+            return Ok(data);
+        }
         // GET: api/Bugs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bugs>>> GetBugs(int pageSize, int pageNumber )
