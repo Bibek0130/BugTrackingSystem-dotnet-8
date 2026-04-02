@@ -1,7 +1,15 @@
 using BugTrackingSystem.Server.Data;
+using BugTrackingSystem.Server.Models;
+using BugTrackingSystem.Server.Services.Interface;
+using BugTrackingSystem.Server.Services.Service;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Load smtp configurations
+// Load SMTP settings from configuration
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 
 //applying CORS policy for server origin: 7088
 builder.Services.AddCors(options =>
@@ -24,6 +32,11 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"))
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+//registreing services as DI so that controllers can use them
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var app = builder.Build();
 
