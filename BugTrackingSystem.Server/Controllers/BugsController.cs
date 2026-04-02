@@ -28,6 +28,16 @@ namespace BugTrackingSystem.Server.Controllers
         public async Task<ActionResult<int>> GetBugsCount()
         {
             var data = await _context.Bugs.CountAsync();
+           
+            return Ok(data);
+        }
+
+        //Get: api/Bugs
+        [HttpGet("closed-bugs-count")]
+        public async Task<ActionResult<int>> GetClosedBugs()
+        {
+            var data = await _context.Bugs.Where(d => d.Status=="Closed").CountAsync();
+
             return Ok(data);
         }
         // GET: api/Bugs
