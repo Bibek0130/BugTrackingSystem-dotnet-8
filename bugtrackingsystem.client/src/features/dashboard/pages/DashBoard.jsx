@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 function Dashboard() {
     const [bugCount, setBugCount] = useState(); // Example bug count, replace with actual data
     const [bugClosed, setBugClosed] = useState();
+    const [bugUrgent, setBugUrgent] = useState();
     const [fetching, setFetching] = useState(true); // State to track if data is being fetched
 
     useEffect(() => {
@@ -11,6 +12,7 @@ function Dashboard() {
             try {
                 fetchBugCount();
                 getClosedBugs();
+                getBugUrgent();
             }
             catch (err) {
                 console.log("Error fetching data:", err);
@@ -41,7 +43,7 @@ function Dashboard() {
             setFetching(false);
         }
     }
-    //function for fetching bug count from the API
+    //function for fetching bug count closed from the API
     async function getClosedBugs() {
         try {
             const response = await api.get("Bugs/closed-bugs-count");
@@ -55,6 +57,23 @@ function Dashboard() {
             }
         } catch (err) {
             console.log("Error fetching bug count:", err);
+        }
+    }
+
+    //function for fetching bug count closed from the API
+    async function getBugUrgent() {
+        try {
+            const response = await api.get("Bugs/urgent-bugs-count");
+
+            if (response.status >= 200 && response.status < 300) {
+                console.log("Bug Urgent", response);
+                const dd = response.data;
+
+                //set the value to the state
+                setBugUrgent(dd);
+            }
+        } catch (err) {
+            console.log("Error fetching bug urgent count:", err);
         }
     }
     
@@ -80,6 +99,14 @@ function Dashboard() {
                     <div className="col-lg-4 ">{bugClosed}
                     </div>
                 </div>
+
+                <div className="row p-6" style={BugClosedCss}>
+                    <div className="col-lg-4 ">
+                        <p>Urgent Bug: </p>
+                    </div>
+                    <div className="col-lg-4 ">{bugUrgent}
+                    </div>
+                </div>
             </div>
         </>
       
@@ -91,8 +118,6 @@ export default Dashboard;
 const BugCount = {
     borderRadius: "10px",
     border: "2px solid forestgreen",
-   // width: "200px",
-    //height:"150px",
     padding: "5%",
     margin: "2%" //for adding gap and a nice look to it
 }

@@ -25,7 +25,7 @@ function BugList() {
             getListDataById(selectedBug.id);
         }
        
-    }, [pageNumber, view]);
+    }, [pageNumber, view, selectedBug]);
 
     async function getList(pageNumber, pageSize) {
         const url = "Bugs?pageSize=" + pageSize + "&pageNumber=" + pageNumber; 
@@ -86,7 +86,7 @@ function BugList() {
         setView('Read');
 
         //fetch the data
-        getListDataById(bug.id);
+        //getListDataById(bug.id);
     }
 
     //update page
@@ -112,6 +112,7 @@ function BugList() {
                 // Handle unexpected status codes (e.g., 400, 403, 404)
                 console.warn("Server responded with an issue:", response.status);
             }
+            console.log("View : ",view);
         } catch (err) {
             setError(err.message);
             console.log("Something wrong while deleting. Error: ", setError);
@@ -129,10 +130,10 @@ function BugList() {
             {view === 'List' && (
                 <>
                 <h1 style={h1}>My bugs</h1>
-                <div style={tableResponsive}>
-                    <table className="table-bordered table-scrollable" style={listtable}>
+                <div style={tableResponsive} className="">
+                    <table className="table-bordered table-scrollable table-lg" style={listtable}>
                         <thead>
-                            <tr>
+                            <tr className="table-success">
                                 <th style={th}>SN</th>
                                 <th style={th}>Title</th>
                                 <th style={th}>Description</th>
@@ -156,7 +157,7 @@ function BugList() {
                                         <td style={td}>{val.createdDate}</td>
                                         <td style={td} className=''>
                                             <button className='btn btn-sm btn-info' onClick={() => viewBug(val)}>View</button> | 
-                                            <button className='btn btn-sm btn-primary' onClick={() => updateBug(val)}>Update</button> |
+                                            <button className='btn btn-sm btn-warning' onClick={() => updateBug(val)}>Update</button> |
                                             <button className='btn btn-sm btn-danger' onClick={() => deleteBug(val.id)}>Delete</button>
                                         </td>
                                     </tr>
@@ -176,7 +177,7 @@ function BugList() {
             )}
 
             {/*if view is read, show the form*/}
-            {view === 'Read' || view === 'Update' && (
+            {view === "Read" || view === 'Update' && (
                 <>
                     <button onClick={() => setView('List')}>Back to List</button>
                     <BugForm views={view} initialData={selectedBug} />
@@ -210,6 +211,7 @@ const td = {
 }
 const tableResponsive = { //needs fixing 
     maxWidth: "1000px",   // Limit max width
+    height: "400px",
     width: "100%",        // Allow shrinking on smaller screens
     overflowY: "auto",    // Horizontal scroll for small screens
     display: "block"      // Required for overflow to work

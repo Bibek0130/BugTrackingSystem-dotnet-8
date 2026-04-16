@@ -32,11 +32,20 @@ namespace BugTrackingSystem.Server.Controllers
             return Ok(data);
         }
 
-        //Get: api/Bugs
+        //Get: api/Bugs/closed-bugs-count
         [HttpGet("closed-bugs-count")]
         public async Task<ActionResult<int>> GetClosedBugs()
         {
             var data = await _context.Bugs.Where(d => d.Status=="Closed").CountAsync();
+
+            return Ok(data);
+        }
+
+        //Get: api/Bugs/urgent-bugs-count
+        [HttpGet("urgent-bugs-count")]
+        public async Task<ActionResult<int>> GetUrgentBugs()
+        {
+            var data = await _context.Bugs.Where(d => d.Severity == "High").CountAsync();
 
             return Ok(data);
         }
