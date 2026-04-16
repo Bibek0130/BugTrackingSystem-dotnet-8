@@ -41,6 +41,14 @@ namespace BugTrackingSystem.Server.Controllers
             return Ok(data);
         }
 
+        //Get: api/Bugs/n-progress-bugs-count
+        [HttpGet("in-progress-bugs-count")]
+        public async Task<ActionResult<int>> GetInProgressBugs()
+        {
+            var data = await _context.Bugs.Where(d => d.Status == "In Progress").CountAsync();
+            return Ok(data);
+        }
+
         //Get: api/Bugs/urgent-bugs-count
         [HttpGet("urgent-bugs-count")]
         public async Task<ActionResult<int>> GetUrgentBugs()
