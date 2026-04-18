@@ -7,7 +7,7 @@ ENV NODE_ENV=production
 WORKDIR /client
 #copy only package files first for caching
 COPY bugtrackingsystem.client/package*.json ./
-RUN npm install --include = dev
+RUN npm install --include=dev
 
 #copy rest of the frontend
 COPY bugtrackingsystem.client .
