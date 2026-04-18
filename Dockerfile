@@ -1,8 +1,8 @@
 #Frontend build
-From node:20 AS ClientBuild
+From node:20 AS client-build
 
-ENV DOCKER = true
-ENV NODE_ENV = production
+ENV DOCKER=true
+ENV NODE_ENV=production
 
 WORKDIR /client
 #copy only package files first for caching
@@ -29,7 +29,7 @@ COPY --from=client-build /client/dist ./BugTrackingSystem.Server/wwwroot
 RUN dotnet publish BugTrackingSystem.Server/BugTrackingSystem.Server.csproj -c Release -o out
 
 #Runtime image
-FROM mcr.microsoft.com/dotnet.aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
 WORKDIR /app
 COPY --from=build /app/out .
