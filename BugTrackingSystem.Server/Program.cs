@@ -57,6 +57,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapFallbackToFile("/index.html");
+//app.MapFallbackToFile("/index.html"); //in dev
+app.MapFallbackToFile("index.html"); //in production    
+
+//render config for  port in production
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5182"; //if port is not set, use 5182 as default
+app.Urls.Add($"http://*:{port}");
 
 app.Run();

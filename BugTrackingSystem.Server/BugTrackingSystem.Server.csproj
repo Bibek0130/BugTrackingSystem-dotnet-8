@@ -5,8 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <SpaRoot>..\bugtrackingsystem.client</SpaRoot>
-    <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
-    <SpaProxyServerUrl>https://localhost:64240</SpaProxyServerUrl>
+	  <!--Commenting spa proxy settings in production-->
+    <!--<SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>-->
+    <!-- <SpaProxyServerUrl>https://localhost:64240</SpaProxyServerUrl> -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
